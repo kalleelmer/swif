@@ -2,31 +2,54 @@ package swif;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 
-public class BroadCastThread{
+public class BroadCastThread extends Thread {
+	private static final int BROADCAST_INTERVAL = 2000;
+	private static final int RETRY_TIMEOUT = 5000;
+
 	private DataStructure ds;
-	private MulticastSocket sock;
+	private DatagramSocket sock;
 
-	public BroadCastThread(DataStructure ds) throws IOException{
+	public BroadCastThread(DataStructure ds) throws IOException {
 		this.ds = ds;
-		sock = new MulticastSocket();
-		sock.joinGroup(InetAddress.getByName("256.0.9.5"));
-		
+		sock = new DatagramSocket();
+		sock.setBroadcast(true);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				if (sock != null) {
 					sock.close();
+					interrupt();
 				}
 			}
 		});
 	}
 
-
-
-
-
-
+	public void run() {
+		try {
+			while (true) {
+				try {
+					String message = "SERVICE_OFFER:" + ds.getPeerName();
+					byte[] data = message.getBytes();
+					DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getByName("255.255.255.255"),
+							ds.getBroadcastPort());
+					sock.send(p);
+				} catch (IOException e) {
+					if (isInterrupted()) {
+						throw new InterruptedException();
+					} else {
+						System.out.println("Broadcast thread error: " + e.getMessage());
+						System.out.println("Broadcast thread retry in " + RETRY_TIMEOUT + " ms");
+						Thread.sleep(RETRY_TIMEOUT);
+					}
+				}
+				Thread.sleep(BROADCAST_INTERVAL);
+			}
+		} catch (InterruptedException e1) {
+			System.out.println("Broadcast thread exiting.");
+			return;
+		}
+	}
 }

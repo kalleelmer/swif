@@ -18,14 +18,15 @@ public class Gui{
 		new Thread(new Runnable(){
 			@Override
 			public void run(){
-				while(true){
-					try{
-						this.wait();
-						//someList.setPeers(ds.getPeers()); //datastructure was modified
-					} catch (InterruptedException e){
-						//Nothing
-					}
-				}
+				// while(true){
+				// try{
+				// this.wait();
+				// //someList.setPeers(ds.getPeers()); //datastructure was
+				// modified
+				// } catch (InterruptedException e){
+				// //Nothing
+				// }
+				// }
 			}
 		}).start();
 	}
