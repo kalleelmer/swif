@@ -10,6 +10,7 @@ public class Main {
 		Gui g = new Gui(ds, ot);
 		ds.addGuiListener(g);
 		new BroadCastThread(ds).start();
+		new PeerListener(ds).start();
 	}
 
 }
