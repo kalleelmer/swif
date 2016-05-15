@@ -31,7 +31,7 @@ public class BroadCastThread extends Thread {
 		try {
 			while (true) {
 				try {
-					String message = "SERVICE_OFFER:" + ds.getPeerName();
+					String message = "SERVICE_OFFER:" + ds.uuid + ":" + ds.getPeerName();
 					byte[] data = message.getBytes();
 					DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getByName("255.255.255.255"),
 							ds.getBroadcastPort());

@@ -1,13 +1,21 @@
 package swif;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class DataStructure {
 	private Gui g;
 	private ArrayList<Peer> peers;
+	/**
+	 * This a universally unique identifier used to distinguish each client,
+	 * even if multiple clients share the same name.
+	 */
+	public final String uuid;
 
 	public DataStructure() {
 		peers = new ArrayList<>();
+		uuid = UUID.randomUUID().toString();
+		System.out.println("Data structure initialized. UUID is " + uuid);
 	}
 
 	public void addGuiListener(Gui g) {
