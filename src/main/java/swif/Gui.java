@@ -1,3 +1,4 @@
+package swif;
 
 public class Gui{
 	private DataStructure ds;
