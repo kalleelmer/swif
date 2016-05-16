@@ -15,6 +15,7 @@ public class PeerData extends Observable {
 	}
 
 	public static final int FILE_PORT = 36837;
+	public static final int BUFFER_SIZE = 65536;
 	private Map<String, Peer> peers;
 	private List<FileReceiver> incoming = new ArrayList<FileReceiver>();
 	/**

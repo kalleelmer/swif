@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class FileReceiver extends Thread {
-	private static final int BUFFER_SIZE = 10;
 	private TransferState state = TransferState.CONNECTING;
 	private Socket socket;
 	private File savePath = null;
@@ -23,6 +22,7 @@ public class FileReceiver extends Thread {
 		String message = state.toString() + "\n";
 		try {
 			socket.getOutputStream().write(message.getBytes());
+			socket.getOutputStream().flush();
 		} catch (IOException e) {
 			System.out.println("FileReceiver failed to send state to sender: " + e.getMessage());
 			errorAbort();
@@ -51,7 +51,7 @@ public class FileReceiver extends Thread {
 				errorAbort();
 				return;
 			}
-			byte[] buffer = new byte[BUFFER_SIZE];
+			byte[] buffer = new byte[PeerData.BUFFER_SIZE];
 			int byteCounter = 0;
 			output = new FileOutputStream(savePath);
 			while (byteCounter < length) {
@@ -147,6 +147,7 @@ public class FileReceiver extends Thread {
 		if (state != newState) {
 			state = newState;
 			notifyAll();
+			sendState();
 		}
 	}
 

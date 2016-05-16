@@ -78,8 +78,22 @@ public class Main {
 		}
 		try {
 			InetAddress address = InetAddress.getByName(args[2]);
+			FileSender sender = new FileSender(address, file);
+			sender.start();
+			System.out.println("Connecting...");
+			sender.waitForStateChange(TransferState.CONNECTING);
+			System.out.println("Waiting for receiver to accept...");
+			sender.waitForStateChange(TransferState.PENDING);
+			System.out.println("Sending...");
+			sender.join();
 		} catch (UnknownHostException e) {
 			System.out.println("Invalid host: " + e.getMessage());
+			System.exit(1);
+		} catch (IOException e) {
+			System.out.println("Sending error: " + e.getMessage());
+			System.exit(1);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 			System.exit(1);
 		}
 	}
