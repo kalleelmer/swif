@@ -1,26 +1,32 @@
 package swif;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.UUID;
 
-public class DataStructure {
-	private Gui g;
+public class PeerData extends Observable {
+	private static volatile PeerData instance;
+
+	public static PeerData getInstance() {
+		return instance != null ? instance : (instance = new PeerData());
+	}
+
+	public static final int FILE_PORT = 36837;
 	private Map<String, Peer> peers;
+	private List<FileReceiver> incoming = new ArrayList<FileReceiver>();
 	/**
 	 * This a universally unique identifier used to distinguish each client,
 	 * even if multiple clients share the same name.
 	 */
 	public final String uuid;
 
-	public DataStructure() {
+	private PeerData() {
 		peers = new HashMap<String, Peer>();
 		uuid = UUID.randomUUID().toString();
 		System.out.println("Data structure initialized. UUID is " + uuid);
-	}
-
-	public void addGuiListener(Gui g) {
-		this.g = g;
 	}
 
 	/**
@@ -39,10 +45,9 @@ public class DataStructure {
 		Peer existing = peers.get(peer.uuid);
 		if (existing == null || !peers.get(peer.uuid).equals(peer)) {
 			peers.put(peer.uuid, peer);
-			// TODO notify someone who cares about the change, depending on
-			// implementation. This could be observer pattern or a wait() and
-			// notifyAll() construct
 			System.out.println("Added new peer: " + peer.uuid);
+			setChanged();
+			notifyObservers();
 		} else {
 			existing.refresh();
 			System.out.println("Peer no change: " + peer.uuid);
@@ -64,6 +69,12 @@ public class DataStructure {
 	 */
 	public int getBroadcastPort() {
 		return 37635;
+	}
+
+	public void addReceiver(FileReceiver receiver) {
+		incoming.add(receiver);
+		setChanged();
+		notifyObservers();
 	}
 
 }

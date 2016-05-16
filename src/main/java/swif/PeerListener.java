@@ -12,11 +12,11 @@ import java.net.DatagramSocket;
 public class PeerListener extends Thread {
 	private static final int RETRY_TIMEOUT = 5000;
 
-	private DataStructure ds;
+	private PeerData ds;
 	private DatagramSocket sock;
 
-	public PeerListener(DataStructure ds) throws IOException {
-		this.ds = ds;
+	public PeerListener() throws IOException {
+		this.ds = PeerData.getInstance();
 		sock = new DatagramSocket(ds.getBroadcastPort());
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {

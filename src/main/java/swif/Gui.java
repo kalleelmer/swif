@@ -1,23 +1,20 @@
 package swif;
 
-public class Gui{
-	private DataStructure ds;
-	private OfferThreads ot;
+public class Gui {
+	private PeerData ds;
 
-	public Gui(DataStructure ds, OfferThreads ot){
-		this.ds = ds;
-		this.ot = ot;
+	public Gui() {
+		this.ds = PeerData.getInstance();
 
-		//Faktiskt gui
+		// Faktiskt gui
 
 		startListening();
 	}
 
-
-	private void startListening(){
-		new Thread(new Runnable(){
+	private void startListening() {
+		new Thread(new Runnable() {
 			@Override
-			public void run(){
+			public void run() {
 				// while(true){
 				// try{
 				// this.wait();
@@ -30,6 +27,5 @@ public class Gui{
 			}
 		}).start();
 	}
-
 
 }

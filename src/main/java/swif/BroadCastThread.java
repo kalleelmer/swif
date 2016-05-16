@@ -9,11 +9,11 @@ public class BroadCastThread extends Thread {
 	private static final int BROADCAST_INTERVAL = 2000;
 	private static final int RETRY_TIMEOUT = 5000;
 
-	private DataStructure ds;
+	private PeerData ds;
 	private DatagramSocket sock;
 
-	public BroadCastThread(DataStructure ds) throws IOException {
-		this.ds = ds;
+	public BroadCastThread() throws IOException {
+		this.ds = PeerData.getInstance();
 		sock = new DatagramSocket();
 		sock.setBroadcast(true);
 
