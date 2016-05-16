@@ -45,8 +45,8 @@ public class DataStructure {
 			System.out.println("Added new peer: " + peer.uuid);
 		} else {
 			existing.refresh();
+			System.out.println("Peer no change: " + peer.uuid);
 		}
-		System.out.println("Peer no change: " + peer.uuid);
 	}
 
 	/**
