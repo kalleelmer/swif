@@ -9,9 +9,11 @@ import java.util.Scanner;
 
 public class FileReceiver extends Thread {
 	private static final int BUFFER_SIZE = 10;
-	private TransferState state = TransferState.PENDING;
+	private TransferState state = TransferState.CONNECTING;
 	private Socket socket;
 	private File savePath = null;
+	private String fileName;
+	private int length;
 
 	public FileReceiver(Socket socket) {
 		this.socket = socket;
@@ -34,12 +36,10 @@ public class FileReceiver extends Thread {
 		try {
 			input = socket.getInputStream();
 			scan = new Scanner(input);
-			String filename = scan.nextLine();
-			System.out.println("Receiving file with name '" + filename + "'");
-			int length = Integer.parseInt(scan.nextLine());
-			System.out.println("File length is " + length);
-			accept(new File("testfile")); // TODO Remove, for testing
-			waitForAccept();
+			fileName = scan.nextLine();
+			length = Integer.parseInt(scan.nextLine());
+			setState(TransferState.PENDING);
+			waitForStateChange(TransferState.PENDING);
 			switch (state) {
 			case ACCEPTED:
 				sendState();
@@ -90,6 +90,14 @@ public class FileReceiver extends Thread {
 		}
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
 	private void close() {
 		state = TransferState.COMPLETED;
 		sendState();
@@ -120,12 +128,6 @@ public class FileReceiver extends Thread {
 		}
 	}
 
-	private synchronized void waitForAccept() throws InterruptedException {
-		while (state == TransferState.PENDING) {
-			wait();
-		}
-	}
-
 	/**
 	 * Marks this transfer as accepted by the user. After calling this method,
 	 * the transfer of data will begin and it will automatically be saved to
@@ -136,9 +138,22 @@ public class FileReceiver extends Thread {
 	 */
 	public synchronized void accept(File savePath) {
 		if (state == TransferState.PENDING) {
-			state = TransferState.ACCEPTED;
 			this.savePath = savePath;
+			setState(TransferState.ACCEPTED);
 		}
-		notifyAll();
+	}
+
+	private synchronized void setState(TransferState newState) {
+		if (state != newState) {
+			state = newState;
+			notifyAll();
+		}
+	}
+
+	public synchronized TransferState waitForStateChange(TransferState lastState) throws InterruptedException {
+		while (state == lastState) {
+			wait();
+		}
+		return state;
 	}
 }
