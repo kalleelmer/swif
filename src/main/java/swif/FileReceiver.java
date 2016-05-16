@@ -55,9 +55,7 @@ public class FileReceiver extends Thread {
 			}
 			System.out.println("Done, received " + byteCounter + " bytes of file data");
 			// TODO Save file
-			state = TransferState.COMPLETED;
-			sendState();
-			socket.close();
+			close();
 
 		} catch (IOException e) {
 			System.out.println("FileReceiver failed to read data: " + e.getMessage());
