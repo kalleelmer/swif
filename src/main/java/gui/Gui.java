@@ -49,8 +49,8 @@ public class Gui extends Application {
                 success = true;
                 String filePath = null;
                 for (File file:db.getFiles()) {
+                    controller.setFile(file);
                     filePath = file.getAbsolutePath();
-                    System.out.println(filePath);
                 }
             }
             event.setDropCompleted(success);
