@@ -1,5 +1,8 @@
 package swif;
 
+import gui.Gui;
+import javafx.application.Application;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,7 +19,8 @@ public class Main {
 			new BroadCastThread().start();
 			new PeerListener().start();
 			new FileListener().start();
-			Gui g = new Gui();
+			Gui gui = Gui.launch(Gui.class);
+			// gui.getController().addTargetAddresses();
 		} else {
 			switch (args[0]) {
 			case "send":
