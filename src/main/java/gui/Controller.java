@@ -91,9 +91,9 @@ public class Controller {
 
 	public File openFileSaveDialog(String host, String filename) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle("Confirmation Dialog with Custom Actions");
-		alert.setHeaderText("Look, a Confirmation Dialog with Custom Actions");
-		alert.setContentText("Choose your option.");
+		alert.setTitle("Save file");
+		alert.setHeaderText("Someone wants to send you a file!");
+		alert.setContentText("Do you want to receive '" + filename + "' from '" + host + "?");
 		Optional<ButtonType> result = alert.showAndWait();
 
 		if (result.get() == ButtonType.OK) {
