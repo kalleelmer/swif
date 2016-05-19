@@ -1,5 +1,6 @@
 package swif;
 
+import gui.Controller;
 import gui.Gui;
 import javafx.application.Application;
 
@@ -15,12 +16,13 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
+			Gui gui = new Gui();
+			gui.launch(Gui.class);
+			Controller guiController = gui.getController();
 			// TODO Run interactive
 			new BroadCastThread().start();
 			new PeerListener().start();
 			new FileListener().start();
-			Gui gui = Gui.launch(Gui.class);
-			// gui.getController().addTargetAddresses();
 		} else {
 			switch (args[0]) {
 			case "send":
