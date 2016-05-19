@@ -40,18 +40,18 @@ public class PeerData extends Observable {
 		// TODO clean out clients that are no longer active
 		if (peer.uuid.equals(uuid)) {
 			// Don't add self as peer
-			System.out.println("Ignoring self");
-			return;
+			// System.out.println("Ignoring self");
+			// return;
 		}
 		Peer existing = peers.get(peer.uuid);
-		if (existing == null || !peers.get(peer.uuid).equals(peer)) {
+		if (existing == null) { // || !peers.get(peer.uuid).equals(peer)) {
 			peers.put(peer.uuid, peer);
 			System.out.println("Added new peer: " + peer.uuid);
 			setChanged();
 			notifyObservers();
 		} else {
 			existing.refresh();
-			System.out.println("Peer no change: " + peer.uuid);
+			// System.out.println("Peer no change: " + peer.uuid);
 		}
 	}
 
@@ -76,6 +76,13 @@ public class PeerData extends Observable {
 		incoming.add(receiver);
 		setChanged();
 		notifyObservers();
+	}
+
+	/**
+	 * Returns the list of discovered peers
+     */
+	public Map<String, Peer> getPeers() {
+		return peers;
 	}
 
 }

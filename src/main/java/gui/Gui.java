@@ -7,10 +7,18 @@ import javafx.scene.Scene;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
+import swif.Peer;
+import swif.PeerData;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.stream.Collectors;
 
-public class Gui extends Application {
+public class Gui extends Application implements Observer {
     private Controller controller;
 
     @Override
@@ -56,6 +64,18 @@ public class Gui extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+
+	@Override
+	public void update(Observable observable, Object o) {
+		PeerData pd = (PeerData) observable;
+		Map<String, Peer> peers = pd.getPeers();
+		List<InetAddress> addresses = peers.entrySet().stream()
+			.sorted((p1, p2) -> p1.getValue().getAddress().toString().compareTo(p2.getValue().getAddress().toString()))
+			.map(peer -> peer.getValue().getAddress())
+			.collect(Collectors.toList());
+		controller.addTargetAddresses(addresses);
+	}
 
 
     public static void main(String[] args) {

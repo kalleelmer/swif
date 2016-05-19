@@ -60,4 +60,8 @@ public class Peer {
 	public boolean isAlive() {
 		return System.currentTimeMillis() - lastSeen < TIMEOUT;
 	}
+
+	public InetAddress getAddress() {
+		return address;
+	}
 }
