@@ -17,12 +17,12 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
 			Gui gui = new Gui();
-			gui.launch(Gui.class);
-			Controller guiController = gui.getController();
-			// TODO Run interactive
+			PeerData.getInstance().addObserver(gui);
 			new BroadCastThread().start();
 			new PeerListener().start();
-			new FileListener().start();
+			new FileListener(gui).start();
+
+			gui.launch(Gui.class);
 		} else {
 			switch (args[0]) {
 			case "send":

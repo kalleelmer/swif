@@ -8,13 +8,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import swif.FileSender;
+import swif.Peer;
+import swif.PeerData;
+import swif.TransferState;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Controller {
 	private Stage stage;
@@ -79,14 +82,40 @@ public class Controller {
 	public void sendFile() {
 		String target = target_input.getText();
 		try {
+			sendFile(InetAddress.getByName(target), selectedFile);
 			new FileSender(InetAddress.getByName(target), selectedFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void addTargetAddresses(ArrayList<InetAddress> targetAddresses) {
-		target_list.setItems(FXCollections.observableArrayList(targetAddresses));
+	private void sendFile(InetAddress target, File file) {
+		try {
+			InetAddress address = target;
+			FileSender sender = new FileSender(address, file);
+			sender.start();
+			System.out.println("Connecting...");
+			sender.waitForStateChange(TransferState.CONNECTING);
+			System.out.println("Waiting for receiver to accept...");
+			sender.waitForStateChange(TransferState.PENDING);
+			System.out.println("Sending...");
+			sender.join();
+			System.out.println("Sent!");
+		} catch (UnknownHostException e) {
+			System.out.println("Invalid host: " + e.getMessage());
+			System.exit(1);
+		} catch (IOException e) {
+			System.out.println("Sending error: " + e.getMessage());
+			System.exit(1);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+
+	public void addTargetAddresses(List<InetAddress> targetAddresses) {
+		target_list.setItems(FXCollections.observableList(targetAddresses));
 	}
 
 	public File openFileSaveDialog(String host, String filename) {
@@ -112,4 +141,5 @@ public class Controller {
 		}
 		return null;
 	}
+
 }
