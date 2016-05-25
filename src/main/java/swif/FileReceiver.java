@@ -56,13 +56,13 @@ public class FileReceiver extends Thread {
 			output = new FileOutputStream(savePath);
 			while (byteCounter < length) {
 				int remaining = length - byteCounter;
-				System.out.println(remaining + " more bytes to read.");
+				// System.out.println(remaining + " more bytes to read.");
 				int result = input.read(buffer, 0, Math.min(buffer.length, remaining));
-				System.out.println("Received " + byteCounter + " bytes of file data");
+				// System.out.println("Received " + byteCounter + " bytes of file data");
 				output.write(buffer, 0, result);
 				byteCounter += result;
 			}
-			System.out.println("Done, received " + byteCounter + " bytes of file data");
+			// System.out.println("Done, received " + byteCounter + " bytes of file data");
 			close();
 		} catch (IOException e) {
 			System.out.println("FileReceiver failed to read data: " + e.getMessage());
@@ -132,7 +132,7 @@ public class FileReceiver extends Thread {
 	 * Marks this transfer as accepted by the user. After calling this method,
 	 * the transfer of data will begin and it will automatically be saved to
 	 * disk.
-	 * 
+	 *
 	 * @param savePath
 	 *            The file path where the received data should be saved.
 	 */

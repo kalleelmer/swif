@@ -18,10 +18,9 @@ public class Main {
 		if (args.length == 0) {
 			Gui gui = new Gui();
 			PeerData.getInstance().addObserver(gui);
-
 			new BroadCastThread().start();
 			new PeerListener().start();
-			new FileListener().start();
+			new FileListener(gui).start();
 
 			gui.launch(Gui.class);
 		} else {
