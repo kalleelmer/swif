@@ -18,15 +18,12 @@ public class Main {
 		if (args.length == 0) {
 			Gui gui = new Gui();
 			PeerData.getInstance().addObserver(gui);
-			(new Thread() {
-				public void run() {
-					gui.launch(Gui.class);
-				}
-			}).start();
+
 			new BroadCastThread().start();
 			new PeerListener().start();
 			new FileListener().start();
 
+			gui.launch(Gui.class);
 		} else {
 			switch (args[0]) {
 			case "send":

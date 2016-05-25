@@ -41,10 +41,10 @@ public class PeerData extends Observable {
 		if (peer.uuid.equals(uuid)) {
 			// Don't add self as peer
 			// System.out.println("Ignoring self");
-			// return;
+			return;
 		}
 		Peer existing = peers.get(peer.uuid);
-		if (existing == null) { // || !peers.get(peer.uuid).equals(peer)) {
+		if (existing == null) {
 			peers.put(peer.uuid, peer);
 			System.out.println("Added new peer: " + peer.uuid);
 			setChanged();

@@ -19,7 +19,7 @@ import java.util.Observer;
 import java.util.stream.Collectors;
 
 public class Gui extends Application implements Observer {
-    private Controller controller;
+    private static volatile Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
